@@ -12,7 +12,6 @@ import (
 const consumerCount = 4
 
 func main() {
-
 	ch, rmqClose, err := new(rabbitmq).dial()
 	if err != nil {
 		panic(err)
@@ -44,14 +43,14 @@ func consume(ch *amqp.Channel) {
 	}
 	for m := range msgs {
 		process(m)
-		err := m.Ack(false)
-		if err != nil {
-			err = errors.Wrap(err, "ack")
-			panic(err)
-		}
 	}
 }
 
 func process(m amqp.Delivery) {
+	err := m.Ack(false)
+	if err != nil {
+		err = errors.Wrap(err, "ack")
+		panic(err)
+	}
 	log.Println(m.Body)
 }
